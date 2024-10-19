@@ -4,11 +4,10 @@ import ListPage from "./routes/listPage/listPage";
 import { Layout, RequireAuth } from "./routes/layout/layout";
 import SinglePage from "./routes/singlePage/singlePage";
 import ProfilePage from "./routes/profilePage/profilePage";
-import AboutPage from "./routes/aboutPage/aboutPage";
 import Login from "./routes/login/login";
 import Register from "./routes/register/register";
 import ProfileUpdatePage from "./routes/profileUpdatePage/profileUpdatePage";
-import NewPostPage from "./routes/newPostPage/newPostPage";
+import NewConferencePage from "./routes/newConferencePage/newConferencePage";
 import {
   listPageLoader,
   singlePageLoader,
@@ -24,10 +23,6 @@ function App() {
         {
           path: "/",
           element: <HomePage />,
-        },
-        {
-          path: "/about",
-          element: <AboutPage />,
         },
         {
           path: "/list",
@@ -64,7 +59,7 @@ function App() {
         },
         {
           path: "/add",
-          element: <NewPostPage />,
+          element: <NewConferencePage />,
         },
       ],
     },

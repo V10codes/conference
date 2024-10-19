@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,91 +7,64 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id         String      @id @default(auto()) @map("_id") @db.ObjectId
-  title      String
-  price      Int
-  images     String[]
-  address    String
-  city       String
-  bedroom    Int
-  bathroom   Int
-  latitude   String
-  longitude  String
-  type       Type
-  property   Property
-  createdAt  DateTime    @default(now())
-  user       User        @relation(fields: [userId], references: [id])
-  userId     String      @db.ObjectId
-  postDetail PostDetail?
-  savedPosts SavedPost[]
+model Conference {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  title          String           @db.String
+  description    String           @db.String
+  venue          String           @db.String
+  program        String           @db.String
+  author         User             @relation("AuthorOfConference", fields: [authorId], references: [id])
+  authorId       String           @db.ObjectId
+  startDate      DateTime?        @map("start_date") @db.Timestamp
+  endDate        DateTime?        @map("end_date") @db.Timestamp
+  accepting      Boolean          @default(true)
+  creationDate   DateTime?        @default(now())
+  price          Float            @default(0.0)
+  guestSpeakers  String[]         @default([])
+  topics         String[]         @default([])
+  papers         Paper[]          @relation("ConferencePapers")
+  
+  // Establish relationship with Registration model
+  registrations   Registration[]   @relation("ConferenceRegistrations") // Relationship to registrations
 }
 
-enum Type {
-  buy
-  rent
-}
-
-enum Property {
-  apartment
-  house
-  condo
-  land
-}
-
-model PostDetail {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  desc       String
-  utilities  String?
-  pet        String?
-  income     String?
-  size       Int?
-  school     Int?
-  bus        Int?
-  restaurant Int?
-  post       Post    @relation(fields: [postId], references: [id])
-  postId     String  @unique @db.ObjectId
-}
-
-model SavedPost {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
-  post      Post     @relation(fields: [postId], references: [id])
-  userId    String   @unique @db.ObjectId
-  postId    String   @unique @db.ObjectId
-  createdAt DateTime @default(now())
-
-  @@unique([userId, postId])
+enum Role {
+  ADMIN
+  ATTENDEE
+  AUTHOR
 }
 
 model User {
-  id         String      @id @default(auto()) @map("_id") @db.ObjectId
-  email      String      @unique
-  username   String      @unique
-  password   String
-  avatar     String?
-  createdAt  DateTime    @default(now())
-  posts      Post[]
-  savedPosts SavedPost[]
-  chats      Chat[]      @relation(fields: [chatIDs], references: [id])
-  chatIDs    String[]    @db.ObjectId
+  id             String             @id @default(auto()) @map("_id") @db.ObjectId
+  email          String             @unique
+  username       String             @unique
+  password       String
+  createdAt      DateTime           @default(now())
+  authored       Conference[]       @relation("AuthorOfConference")
+  papers         Paper[]            @relation("UserPapers")
+  role           Role               @default(ATTENDEE)
+
+  // Array of conference registrations
+  registrations   Registration[]     @relation("UserRegistrations") // Relationship to registrations
 }
 
-model Chat {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  users     User[]    @relation(fields: [userIDs], references: [id])
-  userIDs   String[]  @db.ObjectId
-  createdAt DateTime  @default(now())
-  seenBy    String[]  @db.ObjectId
-  messages  Message[]
-  lastMessage String?
+model Registration {
+  id             String             @id @default(auto()) @map("_id") @db.ObjectId
+  conference     Conference         @relation("ConferenceRegistrations", fields: [conferenceId], references: [id]) // Establish relationship with Conference
+  conferenceId   String             @db.ObjectId // Foreign key for conferenceId
+  user           User               @relation("UserRegistrations", fields: [userId], references: [id]) // Establish relationship with User
+  userId         String             @db.ObjectId // Foreign key for userId
+  approved       Boolean            @default(false) // Approval status of the registration
+  registrationDate DateTime         @default(now()) // Date of registration
 }
 
-model Message {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  text      String
-  userId    String
-  chat      Chat     @relation(fields: [chatId], references: [id])
-  chatId    String   @db.ObjectId
-  createdAt DateTime @default(now())
+model Paper {
+  id             String             @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  fileUrl        String
+  filename       String
+  user           User               @relation("UserPapers", fields: [userId], references: [id])
+  userId         String             @db.ObjectId
+  conference     Conference         @relation("ConferencePapers", fields: [conferenceId], references: [id])
+  conferenceId   String             @db.ObjectId
 }

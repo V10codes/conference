@@ -25,6 +25,21 @@ function SinglePage() {
       setSaved((prev) => !prev);
     }
   };
+  const handleDelete = async () => {
+    if (!currentUser) {
+      navigate("/login");
+    }
+
+    try {
+      const response = await apiRequest.delete(`/posts/${post.id}`);
+      if (response.status === 200) {
+        navigate("/profile");
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Failed to delete post. Please try again.");
+    }
+  };
 
   return (
     <div className="singlePage">
@@ -150,6 +165,9 @@ function SinglePage() {
             >
               <img src="/save.png" alt="" />
               {saved ? "Place Saved" : "Save the Place"}
+            </button>
+            <button onClick={handleDelete}>
+              <img src="/delete.png" alt="" />
             </button>
           </div>
         </div>
