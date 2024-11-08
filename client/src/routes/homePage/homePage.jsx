@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom"; // Import Link
 import "./homePage.scss";
-import apiRequest from "../../lib/apiRequest"; // Assuming you have a utility for API requests
+import apiRequest from "../../lib/apiRequest";
+import { AuthContext } from "../../context/AuthContext";
+import ConferenceLinks from "../../components/conferenceLinks/conferenceLinks";
 
 const HomePage = () => {
   const [conferences, setConferences] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  // Fetch all conferences when the component mounts
   useEffect(() => {
     const fetchConferences = async () => {
       try {
-        const response = await apiRequest.get("/conferences"); // Make sure your API endpoint is correct
+        const response = await apiRequest.get("/conferences");
         setConferences(response.data);
       } catch (err) {
         console.error("Failed to fetch conferences:", err);
@@ -34,6 +38,7 @@ const HomePage = () => {
 
   return (
     <div className="homepage-container">
+      <ConferenceLinks currentUser={currentUser} />
       <section className="program-section">
         <h2>All Conferences</h2>
         <p>Below are the details of all upcoming conferences:</p>
@@ -51,7 +56,14 @@ const HomePage = () => {
           <tbody>
             {conferences.map((conference) => (
               <tr key={conference.id}>
-                <td>{conference.title}</td>
+                <td>
+                  <Link
+                    to={`conference/${conference.id}`}
+                    className="conference-link"
+                  >
+                    {conference.title}
+                  </Link>
+                </td>
                 <td>
                   {new Date(conference.startDate).toLocaleDateString()} /{" "}
                   {new Date(conference.startDate).toLocaleTimeString()} -{" "}
@@ -59,7 +71,7 @@ const HomePage = () => {
                 </td>
                 <td>{conference.venue}</td>
                 <td>{conference.program}</td>
-                <td>${conference.price.toFixed(2)}</td>
+                <td>{conference.price.toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
@@ -71,7 +83,9 @@ const HomePage = () => {
         <form className="schedule-form">
           <label htmlFor="paperId">Paper ID/ Submission ID:</label>
           <input type="text" id="paperId" name="paperId" />
-          <button className="schedule-btn">Show Schedule</button>
+          <button className="schedule-btn" type="submit">
+            Show Schedule
+          </button>
         </form>
       </section>
     </div>

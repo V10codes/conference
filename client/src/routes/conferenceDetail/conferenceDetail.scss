@@ -1,0 +1,48 @@
+.conference-detail-container {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 20px auto;
+
+  h2 {
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: #555;
+    margin: 8px 0;
+    font-size: 1rem;
+  }
+
+  strong {
+    color: #000;
+  }
+
+  .register-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 15px;
+    h2 {
+      font-size: 1.5rem;
+    }
+    p {
+      font-size: 0.9rem;
+    }
+  }
+}

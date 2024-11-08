@@ -1,5 +1,4 @@
 .homepage-container {
-  background-color: #b0dfe5;
   height: 100vh;
   padding: 20px;
 
@@ -7,7 +6,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #457dab;
     padding: 20px;
     border-radius: 5px;
 
@@ -44,6 +42,7 @@
 
   .program-section {
     margin-top: 40px;
+
     button {
       padding: 5px;
       border-radius: 5px;
@@ -74,6 +73,18 @@
 
       td {
         background-color: #f9f9f9;
+
+        // Style links inside table cells
+        .conference-link {
+          color: #007bff; // Default link color
+          text-decoration: none; // Remove underline
+          transition: color 0.3s;
+
+          &:hover {
+            color: #0056b3; // Darker shade on hover
+            text-decoration: underline; // Underline on hover
+          }
+        }
       }
     }
   }

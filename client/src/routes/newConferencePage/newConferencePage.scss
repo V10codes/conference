@@ -1,18 +1,23 @@
 .newConferencePage {
   display: flex;
+  flex-direction: column;
   font-weight: 700;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; // Change to align items to the left
   min-height: 100vh;
-  background-color: #f9f9f9;
+  padding: 20px; // Optional padding for spacing
+
+  .link-container {
+    margin-top: 10px;
+    width: 100%; // Ensure full width
+  }
 
   .formContainer {
-    background-color: #ffffff;
     border-radius: 6px;
     padding: 2rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 700px; /* Wider form */
+    max-width: 700px;
+    margin-left: 0; // Align to the left
 
     .wrapper {
       display: flex;
@@ -24,14 +29,15 @@
         margin-bottom: 1rem;
 
         label {
-          font-size: 0.9rem; /* Slightly smaller label text */
+          font-size: 0.9rem;
           color: black;
           margin-bottom: 0.5rem;
         }
 
         input[type="text"],
         input[type="number"],
-        input[type="datetime-local"] {
+        input[type="datetime-local"],
+        textarea {
           padding: 0.65rem;
           border: 1px solid #cccccc;
           border-radius: 4px;
@@ -46,37 +52,47 @@
           }
         }
 
-        .description {
-          .ql-container {
-            height: 180px; /* Slightly smaller height */
-            font-size: 1rem;
+        .nestedItem {
+          display: flex;
+          align-items: center;
+
+          input {
+            flex: 1;
+            margin-right: 0.5rem;
+          }
+
+          button {
+            background-color: #ff4d4d;
+            color: #ffffff;
+            border: none;
             border-radius: 4px;
-            border-color: #cccccc;
+            padding: 0.35rem 0.5rem;
+            cursor: pointer;
+
+            &:hover {
+              background-color: #cc0000;
+            }
           }
         }
       }
 
       .sendButton {
         background-color: #007bff;
-        color: #ffffff;
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
+        color: white;
         border: none;
         border-radius: 4px;
+        padding: 0.65rem;
         cursor: pointer;
-        text-align: center;
-        transition: background-color 0.2s ease-in-out;
+        font-size: 1rem;
 
         &:hover {
           background-color: #0056b3;
         }
       }
 
-      span {
-        display: block;
+      .errorMessage {
+        color: red;
         margin-top: 1rem;
-        color: #ff4d4d;
-        text-align: center;
       }
     }
   }

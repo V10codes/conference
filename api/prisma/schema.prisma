@@ -7,55 +7,66 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//todo 
+//add PaymentInfo
+
 model Conference {
   id             String           @id @default(auto()) @map("_id") @db.ObjectId
   title          String           @db.String
-  description    String           @db.String
-  venue          String           @db.String
-  program        String           @db.String
+  description    String?          @db.String
+  venue          String?          @db.String
+  program        String?          @db.String
   author         User             @relation("AuthorOfConference", fields: [authorId], references: [id])
   authorId       String           @db.ObjectId
   startDate      DateTime?        @map("start_date") @db.Timestamp
   endDate        DateTime?        @map("end_date") @db.Timestamp
   accepting      Boolean          @default(true)
   creationDate   DateTime?        @default(now())
-  price          Float            @default(0.0)
+  price          Float?           @default(0.0)
   guestSpeakers  String[]         @default([])
   topics         String[]         @default([])
   papers         Paper[]          @relation("ConferencePapers")
-  
   // Establish relationship with Registration model
   registrations   Registration[]   @relation("ConferenceRegistrations") // Relationship to registrations
 }
 
-enum Role {
-  ADMIN
-  ATTENDEE
-  AUTHOR
-}
-
 model User {
-  id             String             @id @default(auto()) @map("_id") @db.ObjectId
-  email          String             @unique
-  username       String             @unique
-  password       String
-  createdAt      DateTime           @default(now())
-  authored       Conference[]       @relation("AuthorOfConference")
-  papers         Paper[]            @relation("UserPapers")
-  role           Role               @default(ATTENDEE)
-
+  id             String              @id @default(auto()) @map("_id") @db.ObjectId
+  email          String              @unique
+  username       String              @unique
+  password       String 
+  createdAt      DateTime            @default(now())
+  authored       Conference[]        @relation("AuthorOfConference")
+  papers         Paper[]             @relation("UserPapers")
+  
   // Array of conference registrations
   registrations   Registration[]     @relation("UserRegistrations") // Relationship to registrations
 }
 
 model Registration {
-  id             String             @id @default(auto()) @map("_id") @db.ObjectId
-  conference     Conference         @relation("ConferenceRegistrations", fields: [conferenceId], references: [id]) // Establish relationship with Conference
-  conferenceId   String             @db.ObjectId // Foreign key for conferenceId
-  user           User               @relation("UserRegistrations", fields: [userId], references: [id]) // Establish relationship with User
-  userId         String             @db.ObjectId // Foreign key for userId
-  approved       Boolean            @default(false) // Approval status of the registration
-  registrationDate DateTime         @default(now()) // Date of registration
+  id                  String              @id @default(auto()) @map("_id") @db.ObjectId
+  conference          Conference          @relation("ConferenceRegistrations", fields: [conferenceId], references: [id])
+  conferenceId        String              @db.ObjectId
+  user                User?                @relation("UserRegistrations", fields: [userId], references: [id])
+  userId              String?              @db.ObjectId
+  approved            Boolean             @default(false)
+  registrationDate    DateTime            @default(now())
+  registrationDetail  RegistrationDetail? 
+}
+
+model RegistrationDetail {
+  id                 String       @id @default(auto()) @map("_id") @db.ObjectId
+  registration       Registration @relation(fields: [registrationId], references: [id])
+  registrationId     String       @unique @db.ObjectId
+
+  email              String      // Email of the participant
+  fullName           String      // Full name of the participant
+  gender             String      // Gender of the participant
+  participationMode  String      // Mode of participation (e.g., online, in-person)
+  mobileNumber       String      // Mobile number of the participant
+  identityCardUrl    String      // URL or path to the uploaded identity card
+  transactionDate    DateTime    @default(now()) 
+  paymentProofUrl    String       // URL or path to the proof of payment
 }
 
 model Paper {

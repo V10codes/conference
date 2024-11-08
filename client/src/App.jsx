@@ -1,18 +1,17 @@
 import HomePage from "./routes/homePage/homePage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ListPage from "./routes/listPage/listPage";
 import { Layout, RequireAuth } from "./routes/layout/layout";
-import SinglePage from "./routes/singlePage/singlePage";
 import ProfilePage from "./routes/profilePage/profilePage";
 import Login from "./routes/login/login";
 import Register from "./routes/register/register";
+import MyConferences from "./routes/myConferences/myConferences";
+import AuthoredConferences from "./routes/authoredConferences/authoredConferences";
 import ProfileUpdatePage from "./routes/profileUpdatePage/profileUpdatePage";
 import NewConferencePage from "./routes/newConferencePage/newConferencePage";
-import {
-  listPageLoader,
-  singlePageLoader,
-  profilePageLoader,
-} from "./lib/loaders.js";
+import ApproveAttendeePage from "./routes/approveAttendeePage/approveAttendeePage";
+import ConferenceRegisterPage from "./routes/conferenceRegisterPage/conferenceRegisterPage";
+import { profilePageLoader } from "./lib/loaders.js";
+import ConferenceDetail from "./routes/conferenceDetail/conferenceDetail.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -24,16 +23,7 @@ function App() {
           path: "/",
           element: <HomePage />,
         },
-        {
-          path: "/list",
-          element: <ListPage />,
-          loader: listPageLoader,
-        },
-        {
-          path: "/:id",
-          element: <SinglePage />,
-          loader: singlePageLoader,
-        },
+
         {
           path: "/login",
           element: <Login />,
@@ -60,6 +50,26 @@ function App() {
         {
           path: "/add",
           element: <NewConferencePage />,
+        },
+        {
+          path: "/authored-conferences",
+          element: <AuthoredConferences />,
+        },
+        {
+          path: "/my-conferences",
+          element: <MyConferences />,
+        },
+        {
+          path: "/conference/:id",
+          element: <ConferenceDetail />,
+        },
+        {
+          path: "/conference/register/:id",
+          element: <ConferenceRegisterPage />,
+        },
+        {
+          path: "/authored-conferences/attendee-list/:id",
+          element: <ApproveAttendeePage />,
         },
       ],
     },

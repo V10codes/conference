@@ -39,7 +39,6 @@ export const getConference = async (req, res) => {
         }
       });
     }
-
     res.status(200).json({ conference, userId });
   } catch (err) {
     console.error(err);
@@ -48,34 +47,24 @@ export const getConference = async (req, res) => {
 };
 
 export const addConference = async (req, res) => {
-  const body = req.body;
-  const tokenUserId = req.userId;
-
+  const { conferenceData } = req.body; // Destructure conferenceData from body
+  const tokenUserId = req.userId; // Assuming req.userId contains the user ID
   try {
-    const newConference = await prisma.conference.create({
+    await prisma.conference.create({
       data: {
-        title: body.title,
-        description: body.description,
-        venue: body.venue,
-        program: body.program,
-        startDate: new Date(body.startDate),
-        endDate: new Date(body.endDate),
+        title: conferenceData.title || "Default Title",
+        description: conferenceData.description || "Default description",
+        venue: conferenceData.venue || "Default venue",
+        program: conferenceData.program || "Default program",
+        startDate: conferenceData.startDate || new Date(),
+        endDate: conferenceData.endDate || new Date(),
         authorId: tokenUserId,
-        price: body.price ? parseFloat(body.price) : 0.0,
-        guestSpeakers: body.guestSpeakers || [],
-        topics: body.topics || [],
-
-        attendees: {
-          create: body.attendees || [],
-        },
-
-        papers: {
-          create: body.papers || [],
-        },
+        price: conferenceData.price !== undefined ? conferenceData.price : 0,
+        guestSpeakers: conferenceData.guestSpeakers || [],
+        topics: conferenceData.guestSpeakers || [],
       },
     });
-
-    res.status(201).json(newConference);
+    res.status(201).json("Conference successfully created");
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to create conference" });
