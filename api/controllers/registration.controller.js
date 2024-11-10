@@ -1,4 +1,5 @@
 import prisma from "../lib/prisma.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -28,7 +29,31 @@ export const registerUser = async (req, res) => {
       req.files["paymentProof"] && req.files["paymentProof"][0]
         ? `uploads/${req.files["paymentProof"][0].filename}`
         : null;
-    // console.log(identityCardUrl, paymentProofUrl);
+
+    if (!identityCardUrl) {
+      return res.status(400).json({ error: "IdentityCardUrl invalid" });
+    }
+    if (!paymentProofUrl) {
+      return res.status(400).json({ error: "PaymentProofUrl invalid" });
+    }
+
+    const identityCardCloudinaryUpload = await uploadOnCloudinary(
+      identityCardUrl
+    );
+    const paymentProofCloudinaryUpload = await uploadOnCloudinary(
+      paymentProofUrl
+    );
+    if (!identityCardCloudinaryUpload) {
+      return res
+        .status(400)
+        .json({ error: "IdentityCardCloudinaryUpload failed" });
+    }
+    if (!paymentProofCloudinaryUpload) {
+      return res
+        .status(400)
+        .json({ error: "paymentCardCloudinaryUpload failed" });
+    }
+
     const registration = await prisma.registration.create({
       data: {
         userId,
@@ -42,17 +67,17 @@ export const registerUser = async (req, res) => {
             gender: registrationDetail.gender,
             participationMode: registrationDetail.participationMode,
             mobileNumber: registrationDetail.mobileNumber,
-            identityCardUrl,
+            identityCardUrl: identityCardCloudinaryUpload,
             transactionDate: registrationDetail.transactionDate
               ? new Date(registrationDetail.transactionDate)
               : new Date(),
-            paymentProofUrl,
+            paymentProofUrl: paymentProofCloudinaryUpload,
           },
         },
       },
     });
 
-    console.log("Registration successful:", registration);
+    // console.log("Registration successful:", registration);
     res.status(201).json(registration);
   } catch (error) {
     console.error("Error during registration:", error);

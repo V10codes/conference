@@ -58,79 +58,77 @@ const ApproveAttendeePage = () => {
       {attendees.length === 0 ? (
         <p className="no-attendees">No attendees found for this conference.</p>
       ) : (
-        <ul className="attendee-list">
-          {attendees.map((attendee) => (
-            <li key={attendee.id} className="attendee-item">
-              {attendee.user ? (
-                <div className="attendee-details">
-                  <p className="attendee-info">
-                    <strong>Name:</strong>{" "}
-                    {attendee.registrationDetail.fullName}
-                  </p>
-                  <p className="attendee-info">
-                    <strong>Email:</strong> {attendee.user.email}
-                  </p>
-                  <p className="attendee-info">
-                    <strong>Gender:</strong>{" "}
-                    {attendee.registrationDetail.gender}
-                  </p>
-                  <p className="attendee-info">
-                    <strong>Participation Mode:</strong>{" "}
-                    {attendee.registrationDetail.participationMode}
-                  </p>
-                  <p className="attendee-info">
-                    <strong>Mobile Number:</strong>{" "}
-                    {attendee.registrationDetail.mobileNumber}
-                  </p>
-                  <p className="attendee-info">
-                    <strong>Transaction Date:</strong>{" "}
-                    {new Date(
-                      attendee.registrationDetail.transactionDate
-                    ).toLocaleDateString()}
-                  </p>
-                  <p className="attendee-info">
-                    <strong>Identity Card:</strong>{" "}
-                    <a
-                      href={`/${attendee.registrationDetail.identityCardUrl}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="file-link"
-                    >
-                      View Identity Card
-                    </a>
-                  </p>
-                  <p className="attendee-info">
-                    <strong>Payment Proof:</strong>{" "}
-                    <a
-                      href={`/${attendee.registrationDetail.paymentProofUrl}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="file-link"
-                    >
-                      View Payment Proof
-                    </a>
-                  </p>
-                  <p className="attendee-info">
-                    <strong>Approval Status:</strong>{" "}
-                    {attendee.approved ? "Approved" : "Not Approved"}
-                  </p>
-                  <button
-                    className={`approval-btn ${
-                      attendee.approved ? "disapprove-btn" : "approve-btn"
-                    }`}
-                    onClick={() =>
-                      toggleApproval(attendee.id, attendee.approved)
-                    }
-                  >
-                    {attendee.approved ? "Disapprove" : "Approve"}
-                  </button>
-                </div>
-              ) : (
-                <p className="no-user-info">No user information available</p>
-              )}
-            </li>
-          ))}
-        </ul>
+        <table className="attendee-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Gender</th>
+              <th>Participation Mode</th>
+              <th>Mobile Number</th>
+              <th>Transaction Date</th>
+              <th>Identity Card</th>
+              <th>Payment Proof</th>
+              <th>Approval Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {attendees.map((attendee) => (
+              <tr key={attendee.id}>
+                {attendee.user ? (
+                  <>
+                    <td>{attendee.registrationDetail.fullName}</td>
+                    <td>{attendee.user.email}</td>
+                    <td>{attendee.registrationDetail.gender}</td>
+                    <td>{attendee.registrationDetail.participationMode}</td>
+                    <td>{attendee.registrationDetail.mobileNumber}</td>
+                    <td>
+                      {new Date(attendee.registrationDetail.transactionDate).toLocaleDateString()}
+                    </td>
+                    <td>
+                      <a
+                        href={`${attendee.registrationDetail.identityCardUrl}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="file-link"
+                      >
+                        View Identity Card
+                      </a>
+                    </td>
+                    <td>
+                      <a
+                        href={`${attendee.registrationDetail.paymentProofUrl}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="file-link"
+                      >
+                        View Payment Proof
+                      </a>
+                    </td>
+                    <td>{attendee.approved ? "Approved" : "Not Approved"}</td>
+                    <td>
+                      <button
+                        className={`approval-btn ${
+                          attendee.approved ? "disapprove-btn" : "approve-btn"
+                        }`}
+                        onClick={() =>
+                          toggleApproval(attendee.id, attendee.approved)
+                        }
+                      >
+                        {attendee.approved ? "Disapprove" : "Approve"}
+                      </button>
+                    </td>
+                  </>
+                ) : (
+                  <td colSpan="10" className="no-user-info">
+                    No user information available
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

@@ -2,7 +2,6 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-// Define the upload directory
 const uploadDir = "uploads/";
 
 // Create the upload directory if it doesn't exist
@@ -40,5 +39,6 @@ const upload = multer({
   { name: "identityCard", maxCount: 1 },
   { name: "paymentProof", maxCount: 1 },
 ]);
+
 
 export default upload;

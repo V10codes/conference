@@ -77,17 +77,6 @@ const HomePage = () => {
           </tbody>
         </table>
       </section>
-
-      <section className="schedule-section">
-        <h3>View Presentation Schedule</h3>
-        <form className="schedule-form">
-          <label htmlFor="paperId">Paper ID/ Submission ID:</label>
-          <input type="text" id="paperId" name="paperId" />
-          <button className="schedule-btn" type="submit">
-            Show Schedule
-          </button>
-        </form>
-      </section>
     </div>
   );
 };
