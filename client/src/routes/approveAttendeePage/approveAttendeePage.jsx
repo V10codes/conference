@@ -67,9 +67,8 @@ const ApproveAttendeePage = () => {
               <th>Participation Mode</th>
               <th>Mobile Number</th>
               <th>Transaction Date</th>
-              <th>Identity Card</th>
+              <th>Papers</th>
               <th>Payment Proof</th>
-              <th>Approval Status</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -84,7 +83,9 @@ const ApproveAttendeePage = () => {
                     <td>{attendee.registrationDetail.participationMode}</td>
                     <td>{attendee.registrationDetail.mobileNumber}</td>
                     <td>
-                      {new Date(attendee.registrationDetail.transactionDate).toLocaleDateString()}
+                      {new Date(
+                        attendee.registrationDetail.transactionDate
+                      ).toLocaleDateString()}
                     </td>
                     <td>
                       <a
@@ -93,7 +94,7 @@ const ApproveAttendeePage = () => {
                         rel="noopener noreferrer"
                         className="file-link"
                       >
-                        View Identity Card
+                        View Papers
                       </a>
                     </td>
                     <td>
@@ -106,7 +107,6 @@ const ApproveAttendeePage = () => {
                         View Payment Proof
                       </a>
                     </td>
-                    <td>{attendee.approved ? "Approved" : "Not Approved"}</td>
                     <td>
                       <button
                         className={`approval-btn ${

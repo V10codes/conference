@@ -4,41 +4,37 @@ import fs from "fs";
 
 const uploadDir = "uploads/";
 
-// Create the upload directory if it doesn't exist
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true }); // Create the directory
+  fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Set up storage engine
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDir); // Set the destination folder for uploads
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname); // Rename the file to avoid conflicts
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 
-// Initialize multer with field expectations
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const fileTypes = /jpeg|jpg|png|pdf/; // Allowed file types
+    const fileTypes = /jpeg|jpg|png|pdf/;
     const extname = fileTypes.test(
       path.extname(file.originalname).toLowerCase()
     );
     const mimetype = fileTypes.test(file.mimetype);
 
     if (extname && mimetype) {
-      return cb(null, true); // Accept file
+      return cb(null, true);
     }
-    cb(new Error("Only images and PDFs are allowed!")); // Reject file
+    cb(new Error("Only images and PDFs are allowed!"));
   },
 }).fields([
   { name: "identityCard", maxCount: 1 },
   { name: "paymentProof", maxCount: 1 },
 ]);
-
 
 export default upload;

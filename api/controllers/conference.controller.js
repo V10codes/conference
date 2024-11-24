@@ -49,25 +49,48 @@ export const getConference = async (req, res) => {
 export const addConference = async (req, res) => {
   const { conferenceData } = req.body; // Destructure conferenceData from body
   const tokenUserId = req.userId; // Assuming req.userId contains the user ID
+
+  // Validate required fields
+  if (
+    !conferenceData.title ||
+    !conferenceData.startDate ||
+    !conferenceData.endDate
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Title, start date, and end date are required." });
+  }
+
   try {
     await prisma.conference.create({
       data: {
-        title: conferenceData.title || "Default Title",
+        title: conferenceData.title,
         description: conferenceData.description || "Default description",
         venue: conferenceData.venue || "Default venue",
         program: conferenceData.program || "Default program",
-        startDate: conferenceData.startDate || new Date(),
-        endDate: conferenceData.endDate || new Date(),
+        startDate: new Date(conferenceData.startDate),
+        endDate: new Date(conferenceData.endDate),
         authorId: tokenUserId,
         price: conferenceData.price !== undefined ? conferenceData.price : 0,
         guestSpeakers: conferenceData.guestSpeakers || [],
-        topics: conferenceData.guestSpeakers || [],
+        topics: conferenceData.topics || [],
+        upiId: conferenceData.upiId,
+        bankName: conferenceData.bankName,
+        accountName: conferenceData.accountName,
+        ifscCode: conferenceData.ifscCode,
+        branch: conferenceData.branch,
+        externalUrl: conferenceData.externalUrl,
       },
     });
-    res.status(201).json("Conference successfully created");
+
+    res.status(201).json({
+      message: "Conference successfully created",
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to create conference" });
+    res
+      .status(500)
+      .json({ message: "Failed to create conference", error: err.message });
   }
 };
 

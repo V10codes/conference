@@ -14,11 +14,23 @@ const AuthoredConferences = () => {
     const fetchConferences = async () => {
       try {
         const response = await apiRequest.get("/conferences");
-        // Filter conferences where currentUser.id matches the conference.authorId
         const userConferences = response.data.filter(
           (conference) => conference.authorId === currentUser.id
         );
-        setConferences(userConferences);
+
+        const conferencesWithAttendees = await Promise.all(
+          userConferences.map(async (conference) => {
+            const attendeeResponse = await apiRequest.get(
+              `/registrations/conference/${conference.id}`
+            );
+            return {
+              ...conference,
+              totalRegistrations: attendeeResponse.data.length,
+            };
+          })
+        );
+
+        setConferences(conferencesWithAttendees);
       } catch (err) {
         console.error("Failed to fetch conferences:", err);
         setError("Failed to load conferences. Please try again later.");
@@ -43,16 +55,13 @@ const AuthoredConferences = () => {
       <section className="AuthoredConferences-list">
         <h2>Authored Conferences</h2>
         <p>Below is a list of conferences authored by you</p>
-        <p>Click the links to approve/disapprove registrations</p>
+        <p>Click the links to approve registrations</p>
         {conferences.length > 0 ? (
           <table className="AuthoredConferences-table">
             <thead>
               <tr>
                 <th>Title</th>
-                <th>Date / Time</th>
-                <th>Venue</th>
-                <th>Program</th>
-                <th>Price</th>
+                <th>Total Registrations</th>
               </tr>
             </thead>
             <tbody>
@@ -65,14 +74,7 @@ const AuthoredConferences = () => {
                       {conference.title}
                     </Link>
                   </td>
-                  <td>
-                    {new Date(conference.startDate).toLocaleDateString()} /{" "}
-                    {new Date(conference.startDate).toLocaleTimeString()} -{" "}
-                    {new Date(conference.endDate).toLocaleTimeString()}
-                  </td>
-                  <td>{conference.venue}</td>
-                  <td>{conference.program}</td>
-                  <td>{conference.price.toFixed(2)}</td>
+                  <td>{conference.totalRegistrations}</td>
                 </tr>
               ))}
             </tbody>

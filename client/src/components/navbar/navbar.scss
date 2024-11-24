@@ -1,21 +1,25 @@
 .wrapper {
   width: 100%;
   background-color: #457dab;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1rem 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  padding: 0.5rem 2rem;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 
   .header {
     text-align: center;
+
     h2 {
-      font-size: 1.8rem;
+      color: #ffffff;
+      font-size: 2rem;
       margin: 0;
-      font-weight: 600;
+      font-weight: 700;
     }
+
     h3 {
       font-size: 1.2rem;
       margin: 0.5rem 0;
       font-weight: 400;
-      color: #0c0202;
     }
   }
 
@@ -30,7 +34,6 @@
         background-color: transparent;
         border: none;
         padding: 0.5rem 1rem;
-        font-size: 1rem;
         cursor: pointer;
 
         .navbar-link {
@@ -38,8 +41,8 @@
           color: #0a0a0a;
 
           &:hover {
-            color: white; // Change text color to white on hover
-            text-decoration: underline; // Add underline on hover
+            color: white;
+            text-decoration: underline;
           }
         }
       }
@@ -53,26 +56,25 @@
         background-color: transparent;
         border: none;
         padding: 0.5rem 1rem;
-        font-size: 1rem;
         cursor: pointer;
-        margin-left: 1rem;
-
         .navbar-link {
           text-decoration: none;
           font-weight: 500;
           color: #131212;
 
           &:hover {
-            color: white; // Change text color to white on hover
-            text-decoration: underline; // Add underline on hover
+            color: white;
+            text-decoration: underline;
           }
         }
       }
+
       span {
         font-size: 1rem;
         margin-right: 1rem;
-        font-weight: 600; // Make the font bold
-        color: #ffffff; // Set the text color to
+        font-weight: 600;
+        color: #ffffff;
+        margin-top:15px;
       }
     }
   }

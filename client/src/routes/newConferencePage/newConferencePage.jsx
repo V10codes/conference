@@ -10,6 +10,11 @@ function NewConferencePage() {
   const [price, setPrice] = useState(0);
   const [guestSpeakers, setGuestSpeakers] = useState([]);
   const [topics, setTopics] = useState([]);
+  const [upiId, setUpiId] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [accountName, setAccountName] = useState("");
+  const [ifscCode, setIfscCode] = useState("");
+  const [branch, setBranch] = useState("");
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
 
@@ -70,6 +75,12 @@ function NewConferencePage() {
           price: parseFloat(price),
           guestSpeakers: guestSpeakers,
           topics: topics,
+          upiId: inputs.upiId,
+          bankName: inputs.bankName,
+          accountName: inputs.accountName,
+          ifscCode: inputs.ifscCode,
+          branch: inputs.branch,
+          externalUrl: inputs.externalUrl,
         },
       });
       alert(res.data.message || "Conference created successfully!");
@@ -81,16 +92,16 @@ function NewConferencePage() {
   };
 
   return (
-    <div className="newConferencePage">
-      <div className="formContainer">
+    <div className="new-conference-page">
+      <div className="form-container">
         <h1>Add New Conference</h1>
-        <div className="wrapper">
+        <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <div className="item">
+            <div className="form-item">
               <label htmlFor="title">Title</label>
               <input id="title" name="title" type="text" required />
             </div>
-            <div className="item">
+            <div className="form-item">
               <label htmlFor="description">Description</label>
               <textarea
                 id="description"
@@ -101,7 +112,7 @@ function NewConferencePage() {
                 placeholder="Enter conference description"
               />
             </div>
-            <div className="item">
+            <div className="form-item">
               <label htmlFor="price">Price</label>
               <input
                 id="price"
@@ -111,26 +122,30 @@ function NewConferencePage() {
                 required
               />
             </div>
-            <div className="item">
+            <div className="form-item">
               <label htmlFor="venue">Venue</label>
               <input id="venue" name="venue" type="text" required />
             </div>
-            <div className="item">
+            <div className="form-item">
               <label htmlFor="program">Program</label>
               <input id="program" name="program" type="text" />
             </div>
-            <div className="item">
+            <div className="form-item">
               <label htmlFor="startDate">Start Date</label>
               <input id="startDate" name="startDate" type="datetime-local" />
             </div>
-            <div className="item">
+            <div className="form-item">
               <label htmlFor="endDate">End Date</label>
               <input id="endDate" name="endDate" type="datetime-local" />
             </div>
-            <div className="item">
+            <div className="form-item">
+              <label htmlFor="externalUrl">External URL </label>
+              <input id="externalUrl" name="externalUrl" type="text" />
+            </div>
+            <div className="guest-speakers">
               <label>Guest Speakers</label>
               {guestSpeakers.map((speaker, index) => (
-                <div key={index} className="nestedItem">
+                <div key={index} className="nested-item">
                   <input
                     type="text"
                     value={speaker}
@@ -151,10 +166,10 @@ function NewConferencePage() {
                 Add Guest Speaker
               </button>
             </div>
-            <div className="item">
+            <div className="topics">
               <label>Topics</label>
               {topics.map((topic, index) => (
-                <div key={index} className="nestedItem">
+                <div key={index} className="nested-item">
                   <input
                     type="text"
                     value={topic}
@@ -173,9 +188,67 @@ function NewConferencePage() {
                 Add Topic
               </button>
             </div>
-            <button className="sendButton">Add Conference</button>
-            {error && <span className="errorMessage">{error}</span>}{" "}
-            {/* More user-friendly error display */}
+
+            {/* Payment Details Section */}
+            <h2>Payment Details</h2>
+            <div className="form-item">
+              <label htmlFor="upiId">UPI ID</label>
+              <input
+                id="upiId"
+                name="upiId"
+                type="text"
+                value={upiId}
+                onChange={(e) => setUpiId(e.target.value)}
+                placeholder="Enter UPI ID"
+              />
+            </div>
+            <div className="form-item">
+              <label htmlFor="bankName">Bank Name</label>
+              <input
+                id="bankName"
+                name="bankName"
+                type="text"
+                value={bankName}
+                onChange={(e) => setBankName(e.target.value)}
+                placeholder="Enter bank name"
+              />
+            </div>
+            <div className="form-item">
+              <label htmlFor="accountName">Account Name</label>
+              <input
+                id="accountName"
+                name="accountName"
+                type="text"
+                value={accountName}
+                onChange={(e) => setAccountName(e.target.value)}
+                placeholder="Enter account name"
+              />
+            </div>
+            <div className="form-item">
+              <label htmlFor="ifscCode">IFSC Code</label>
+              <input
+                id="ifscCode"
+                name="ifscCode"
+                type="text"
+                value={ifscCode}
+                onChange={(e) => setIfscCode(e.target.value)}
+                placeholder="Enter IFSC code"
+              />
+            </div>
+            <div className="form-item">
+              <label htmlFor="branch">Branch</label>
+              <input
+                id="branch"
+                name="branch"
+                type="text"
+                value={branch}
+                onChange={(e) => setBranch(e.target.value)}
+                placeholder="Enter branch"
+              />
+            </div>
+
+            <button className="submit-button">Add Conference</button>
+            {error && <span className="error-message">{error}</span>}
           </form>
         </div>
       </div>

@@ -54,7 +54,6 @@ const ConferenceRegisterPage = () => {
 
     const registrationFormData = new FormData();
 
-    // Append all form data to FormData instance
     registrationFormData.append("userId", userId);
     registrationFormData.append("conferenceId", conferenceId);
     registrationFormData.append("registrationDetail[email]", formData.email);
@@ -168,7 +167,7 @@ const ConferenceRegisterPage = () => {
         </div>
 
         <div className="form-item">
-          <label>Upload Valid Identity Card</label>
+          <label>Upload Papers</label>
           <input
             type="file"
             name="identityCard"
@@ -197,7 +196,6 @@ const ConferenceRegisterPage = () => {
             required
           />
         </div>
-
         <button type="submit" className="submit-button">
           Submit Registration
         </button>

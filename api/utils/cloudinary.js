@@ -4,13 +4,12 @@ import fs from "fs";
 export const uploadOnCloudinary = async (localFilePath) => {
   try {
     if (!localFilePath) return "local File Path not found";
-    //upload on cloudinary
     const res = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
       type: "upload",
     });
     //file has been uploaded successfully
-    // console.log("file is uploaded on cloudinary", res.url);
+    //now delete from local storage
     fs.unlinkSync(localFilePath);
     return res.url;
   } catch (err) {

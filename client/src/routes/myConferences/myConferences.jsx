@@ -71,7 +71,13 @@ const MyConferences = () => {
                     ).toLocaleTimeString()}
                   </td>
                   <td>{registration.conference.venue}</td>
-                  <td>{registration.approved ? "Approved" : "Not Approved"}</td>
+                  <td
+                    className={
+                      registration.approved ? "approved" : "not-approved"
+                    }
+                  >
+                    {registration.approved ? "Approved" : "Not Approved"}
+                  </td>
                   <td>${registration.conference.price.toFixed(2)}</td>
                 </tr>
               ))}
