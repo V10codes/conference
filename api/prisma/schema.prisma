@@ -59,12 +59,12 @@ model RegistrationDetail {
   registration       Registration @relation(fields: [registrationId], references: [id])
   registrationId     String       @unique @db.ObjectId
 
-  email              String      // Email of the participant
-  fullName           String      // Full name of the participant
-  gender             String      // Gender of the participant
+  email              String      
+  fullName           String      
+  gender             String      
   participationMode  String      // Mode of participation (e.g., online, in-person)
-  mobileNumber       String      // Mobile number of the participant
-  identityCardUrl    String      // URL or path to the uploaded identity card
+  mobileNumber       String      
+  identityCardUrl    String      
   transactionDate    DateTime    @default(now()) 
-  paymentProofUrl    String       // URL or path to the proof of payment
+  paymentProofUrl    String       
 }

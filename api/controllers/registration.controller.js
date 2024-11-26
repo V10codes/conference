@@ -1,5 +1,6 @@
 import prisma from "../lib/prisma.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { mailer } from "../utils/mailer.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -146,12 +147,16 @@ export const approveRegistration = async (req, res) => {
   try {
     const { id } = req.params;
     const { approve } = req.body;
+    const { email } = req.body;
 
     const updatedRegistration = await prisma.registration.update({
       where: { id },
       data: { approved: approve },
     });
-
+    // console.log(email);
+    if (approve == true) {
+      mailer(email, id);
+    }
     res.status(200).json(updatedRegistration);
   } catch (error) {
     res.status(500).json({

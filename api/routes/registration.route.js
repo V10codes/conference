@@ -2,11 +2,11 @@ import express from "express";
 import { verifyToken } from "../middleware/verifyToken.js";
 import upload from "../middleware/multerConfig.js";
 import {
-  registerUser, 
-  getUserRegistrations, 
-  getConferenceRegistrations, 
-  approveRegistration, 
-  deleteRegistration, 
+  registerUser,
+  getUserRegistrations,
+  getConferenceRegistrations,
+  approveRegistration,
+  deleteRegistration,
 } from "../controllers/registration.controller.js";
 
 const router = express.Router();

@@ -25,11 +25,12 @@ const ApproveAttendeePage = () => {
     fetchAttendees();
   }, [id]);
 
-  const toggleApproval = async (attendeeId, currentStatus) => {
+  const toggleApproval = async (attendeeId, currentStatus, attendeeEmail) => {
     try {
       const updatedStatus = !currentStatus;
       await apiRequest.put(`/registrations/${attendeeId}/approve`, {
         approve: updatedStatus,
+        email: attendeeEmail,
       });
 
       setAttendees((prevAttendees) =>
@@ -113,7 +114,11 @@ const ApproveAttendeePage = () => {
                           attendee.approved ? "disapprove-btn" : "approve-btn"
                         }`}
                         onClick={() =>
-                          toggleApproval(attendee.id, attendee.approved)
+                          toggleApproval(
+                            attendee.id,
+                            attendee.approved,
+                            attendee.user.email
+                          )
                         }
                       >
                         {attendee.approved ? "Disapprove" : "Approve"}

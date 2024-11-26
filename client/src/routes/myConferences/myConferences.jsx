@@ -50,7 +50,7 @@ const MyConferences = () => {
                 <th>Date / Time</th>
                 <th>Venue</th>
                 <th>Approval Status</th>
-                <th>Price</th>
+                <th>Price (INR)</th>
               </tr>
             </thead>
             <tbody>
@@ -78,7 +78,7 @@ const MyConferences = () => {
                   >
                     {registration.approved ? "Approved" : "Not Approved"}
                   </td>
-                  <td>${registration.conference.price.toFixed(2)}</td>
+                  <td>{registration.conference.price.toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
