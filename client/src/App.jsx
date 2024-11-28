@@ -12,6 +12,7 @@ import ApproveAttendeePage from "./routes/approveAttendeePage/approveAttendeePag
 import ConferenceRegisterPage from "./routes/conferenceRegisterPage/conferenceRegisterPage";
 import { profilePageLoader } from "./lib/loaders.js";
 import ConferenceDetail from "./routes/conferenceDetail/conferenceDetail.jsx";
+import ConferenceUpdatePage from "./routes/conferenceUpdatePage/conferenceUpdatePage.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -70,6 +71,10 @@ function App() {
         {
           path: "/authored-conferences/attendee-list/:id",
           element: <ApproveAttendeePage />,
+        },
+        {
+          path: "/authored-conferences/update/:id",
+          element: <ConferenceUpdatePage />,
         },
       ],
     },

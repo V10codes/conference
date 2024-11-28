@@ -1,15 +1,14 @@
-import { useState, useContext } from "react";
-import "./newConferencePage.scss";
+import { useState, useEffect, useContext } from "react";
+import "./conferenceUpdatePage.scss";
 import apiRequest from "../../lib/apiRequest";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
-function NewConferencePage() {
+function UpdateConferencePage() {
+  const [conferenceData, setConferenceData] = useState(null);
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const [price, setPrice] = useState(0);
-  const [guestSpeakers, setGuestSpeakers] = useState([]);
-  const [topics, setTopics] = useState([]);
   const [upiId, setUpiId] = useState("");
   const [bankName, setBankName] = useState("");
   const [accountName, setAccountName] = useState("");
@@ -17,36 +16,30 @@ function NewConferencePage() {
   const [branch, setBranch] = useState("");
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+  const { id } = useParams(); // Get the conference ID from the URL params
 
-  const handleAddGuestSpeaker = () => {
-    setGuestSpeakers([...guestSpeakers, ""]);
-  };
+  // Fetch existing conference data when the component mounts
+  useEffect(() => {
+    const fetchConferenceData = async () => {
+      try {
+        const res = await apiRequest.get(`/conferences/${id}`);
+        const data = res.data.conference;
+        setConferenceData(data);
+        setDescription(data.description);
+        setPrice(data.price);
+        setUpiId(data.upiId || "");
+        setBankName(data.bankName || "");
+        setAccountName(data.accountName || "");
+        setIfscCode(data.ifscCode || "");
+        setBranch(data.branch || "");
+      } catch (err) {
+        console.error(err);
+        setError("Failed to fetch conference data.");
+      }
+    };
 
-  const handleGuestSpeakerChange = (index, value) => {
-    const updatedSpeakers = [...guestSpeakers];
-    updatedSpeakers[index] = value;
-    setGuestSpeakers(updatedSpeakers);
-  };
-
-  const handleRemoveGuestSpeaker = (index) => {
-    const updatedSpeakers = guestSpeakers.filter((_, i) => i !== index);
-    setGuestSpeakers(updatedSpeakers);
-  };
-
-  const handleAddTopic = () => {
-    setTopics([...topics, ""]);
-  };
-
-  const handleTopicChange = (index, value) => {
-    const updatedTopics = [...topics];
-    updatedTopics[index] = value;
-    setTopics(updatedTopics);
-  };
-
-  const handleRemoveTopic = (index) => {
-    const updatedTopics = topics.filter((_, i) => i !== index);
-    setTopics(updatedTopics);
-  };
+    fetchConferenceData();
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,43 +56,49 @@ function NewConferencePage() {
     }
 
     try {
-      const res = await apiRequest.post("/conferences", {
-        conferenceData: {
-          title: inputs.title,
-          description: description,
-          venue: inputs.venue,
-          program: inputs.program,
-          authorId: currentUser.id,
-          startDate: formattedStartDate,
-          endDate: formattedEndDate,
-          price: parseFloat(price),
-          guestSpeakers: guestSpeakers,
-          topics: topics,
-          upiId: inputs.upiId,
-          bankName: inputs.bankName,
-          accountName: inputs.accountName,
-          ifscCode: inputs.ifscCode,
-          branch: inputs.branch,
-          externalUrl: inputs.externalUrl,
-        },
+      const res = await apiRequest.put(`/conferences/${id}`, {
+        title: inputs.title,
+        description: description,
+        venue: inputs.venue,
+        program: inputs.program,
+        authorId: currentUser.id,
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        price: parseFloat(price),
+        upiId: inputs.upiId,
+        bankName: inputs.bankName,
+        accountName: inputs.accountName,
+        ifscCode: inputs.ifscCode,
+        branch: inputs.branch,
+        externalUrl: inputs.externalUrl,
       });
-      alert(res.data.message || "Conference created successfully!");
+      alert(res.data.message || "Conference updated successfully!");
       navigate("/");
     } catch (err) {
       console.error(err);
-      setError("Failed to create conference. Please try again.");
+      setError("Failed to update conference. Please try again.");
     }
   };
 
+  if (!conferenceData) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="new-conference-page">
+    <div className="update-conference-page">
       <div className="form-container">
-        <h1>Add New Conference</h1>
+        <h1>Update Conference</h1>
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
             <div className="form-item">
               <label htmlFor="title">Title</label>
-              <input id="title" name="title" type="text" required />
+              <input
+                id="title"
+                name="title"
+                type="text"
+                defaultValue={conferenceData.title}
+                required
+              />
             </div>
             <div className="form-item">
               <label htmlFor="description">Description</label>
@@ -118,75 +117,60 @@ function NewConferencePage() {
                 id="price"
                 name="price"
                 type="number"
+                value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 required
               />
             </div>
             <div className="form-item">
               <label htmlFor="venue">Venue</label>
-              <input id="venue" name="venue" type="text" required />
+              <input
+                id="venue"
+                name="venue"
+                type="text"
+                defaultValue={conferenceData.venue}
+                required
+              />
             </div>
             <div className="form-item">
               <label htmlFor="program">Program</label>
-              <input id="program" name="program" type="text" />
+              <input
+                id="program"
+                name="program"
+                type="text"
+                defaultValue={conferenceData.program}
+              />
             </div>
             <div className="form-item">
               <label htmlFor="startDate">Start Date</label>
-              <input id="startDate" name="startDate" type="datetime-local" />
+              <input
+                id="startDate"
+                name="startDate"
+                type="datetime-local"
+                defaultValue={new Date(conferenceData.startDate)
+                  .toISOString()
+                  .slice(0, 16)}
+              />
             </div>
             <div className="form-item">
               <label htmlFor="endDate">End Date</label>
-              <input id="endDate" name="endDate" type="datetime-local" />
+              <input
+                id="endDate"
+                name="endDate"
+                type="datetime-local"
+                defaultValue={new Date(conferenceData.endDate)
+                  .toISOString()
+                  .slice(0, 16)}
+              />
             </div>
             <div className="form-item">
-              <label htmlFor="externalUrl">External URL </label>
-              <input id="externalUrl" name="externalUrl" type="text" />
-            </div>
-            <div className="guest-speakers">
-              <label>Guest Speakers</label>
-              {guestSpeakers.map((speaker, index) => (
-                <div key={index} className="nested-item">
-                  <input
-                    type="text"
-                    value={speaker}
-                    onChange={(e) =>
-                      handleGuestSpeakerChange(index, e.target.value)
-                    }
-                    placeholder="Enter guest speaker"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveGuestSpeaker(index)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-              <button type="button" onClick={handleAddGuestSpeaker}>
-                Add Guest Speaker
-              </button>
-            </div>
-            <div className="topics">
-              <label>Topics</label>
-              {topics.map((topic, index) => (
-                <div key={index} className="nested-item">
-                  <input
-                    type="text"
-                    value={topic}
-                    onChange={(e) => handleTopicChange(index, e.target.value)}
-                    placeholder="Enter topic"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveTopic(index)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-              <button type="button" onClick={handleAddTopic}>
-                Add Topic
-              </button>
+              <label htmlFor="externalUrl">External URL</label>
+              <input
+                id="externalUrl"
+                name="externalUrl"
+                type="text"
+                defaultValue={conferenceData.externalUrl || ""}
+              />
             </div>
 
             {/* Payment Details Section */}
@@ -247,8 +231,9 @@ function NewConferencePage() {
               />
             </div>
 
-            <button className="submit-button">Add Conference</button>
-            {error && <span className="error-message">{error}</span>}
+            {/* Error and Submit Button */}
+            {error && <div className="error">{error}</div>}
+            <button type="submit">Update Conference</button>
           </form>
         </div>
       </div>
@@ -256,4 +241,4 @@ function NewConferencePage() {
   );
 }
 
-export default NewConferencePage;
+export default UpdateConferencePage;

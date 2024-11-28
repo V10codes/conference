@@ -25,11 +25,12 @@ const ApproveAttendeePage = () => {
     fetchAttendees();
   }, [id]);
 
-  const toggleApproval = async (attendeeId, currentStatus) => {
+  const toggleApproval = async (attendeeId, currentStatus, attendeeEmail) => {
     try {
       const updatedStatus = !currentStatus;
       await apiRequest.put(`/registrations/${attendeeId}/approve`, {
         approve: updatedStatus,
+        email: attendeeEmail,
       });
 
       setAttendees((prevAttendees) =>
@@ -67,9 +68,8 @@ const ApproveAttendeePage = () => {
               <th>Participation Mode</th>
               <th>Mobile Number</th>
               <th>Transaction Date</th>
-              <th>Identity Card</th>
+              <th>Papers</th>
               <th>Payment Proof</th>
-              <th>Approval Status</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -84,7 +84,9 @@ const ApproveAttendeePage = () => {
                     <td>{attendee.registrationDetail.participationMode}</td>
                     <td>{attendee.registrationDetail.mobileNumber}</td>
                     <td>
-                      {new Date(attendee.registrationDetail.transactionDate).toLocaleDateString()}
+                      {new Date(
+                        attendee.registrationDetail.transactionDate
+                      ).toLocaleDateString()}
                     </td>
                     <td>
                       <a
@@ -93,7 +95,7 @@ const ApproveAttendeePage = () => {
                         rel="noopener noreferrer"
                         className="file-link"
                       >
-                        View Identity Card
+                        View Papers
                       </a>
                     </td>
                     <td>
@@ -106,14 +108,17 @@ const ApproveAttendeePage = () => {
                         View Payment Proof
                       </a>
                     </td>
-                    <td>{attendee.approved ? "Approved" : "Not Approved"}</td>
                     <td>
                       <button
                         className={`approval-btn ${
                           attendee.approved ? "disapprove-btn" : "approve-btn"
                         }`}
                         onClick={() =>
-                          toggleApproval(attendee.id, attendee.approved)
+                          toggleApproval(
+                            attendee.id,
+                            attendee.approved,
+                            attendee.user.email
+                          )
                         }
                       >
                         {attendee.approved ? "Disapprove" : "Approve"}

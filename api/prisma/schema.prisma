@@ -7,9 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//todo 
-//add PaymentInfo
-
 model Conference {
   id             String           @id @default(auto()) @map("_id") @db.ObjectId
   title          String           @db.String
@@ -25,9 +22,14 @@ model Conference {
   price          Float?           @default(0.0)
   guestSpeakers  String[]         @default([])
   topics         String[]         @default([])
-  papers         Paper[]          @relation("ConferencePapers")
   // Establish relationship with Registration model
-  registrations   Registration[]   @relation("ConferenceRegistrations") // Relationship to registrations
+  registrations  Registration[]   @relation("ConferenceRegistrations") // Relationship to registrations
+  upiId          String         @db.String
+  bankName       String         @db.String
+  accountName    String         @db.String
+  ifscCode       String         @db.String
+  branch         String         @db.String
+  externalUrl    String?         @db.String
 }
 
 model User {
@@ -37,8 +39,6 @@ model User {
   password       String 
   createdAt      DateTime            @default(now())
   authored       Conference[]        @relation("AuthorOfConference")
-  papers         Paper[]             @relation("UserPapers")
-  
   // Array of conference registrations
   registrations   Registration[]     @relation("UserRegistrations") // Relationship to registrations
 }
@@ -59,23 +59,12 @@ model RegistrationDetail {
   registration       Registration @relation(fields: [registrationId], references: [id])
   registrationId     String       @unique @db.ObjectId
 
-  email              String      // Email of the participant
-  fullName           String      // Full name of the participant
-  gender             String      // Gender of the participant
+  email              String      
+  fullName           String      
+  gender             String      
   participationMode  String      // Mode of participation (e.g., online, in-person)
-  mobileNumber       String      // Mobile number of the participant
-  identityCardUrl    String      // URL or path to the uploaded identity card
+  mobileNumber       String      
+  identityCardUrl    String      
   transactionDate    DateTime    @default(now()) 
-  paymentProofUrl    String       // URL or path to the proof of payment
-}
-
-model Paper {
-  id             String             @id @default(auto()) @map("_id") @db.ObjectId
-  title          String
-  fileUrl        String
-  filename       String
-  user           User               @relation("UserPapers", fields: [userId], references: [id])
-  userId         String             @db.ObjectId
-  conference     Conference         @relation("ConferencePapers", fields: [conferenceId], references: [id])
-  conferenceId   String             @db.ObjectId
+  paymentProofUrl    String       
 }

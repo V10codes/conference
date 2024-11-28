@@ -1,5 +1,6 @@
 import prisma from "../lib/prisma.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { mailer } from "../utils/mailer.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -76,8 +77,22 @@ export const registerUser = async (req, res) => {
         },
       },
     });
+    try {
+      const conference = await prisma.conference.findUnique({
+        where: { id: conferenceId },
+      });
 
-    // console.log("Registration successful:", registration);
+      if (!conference) {
+        console.log("Conference not found");
+        return;
+      }
+
+      const conferenceDetailsMessage = `You have registered with email: ${registrationDetail.email}\n for the conference: ${conference.title}`;
+
+      mailer(registrationDetail.email, conferenceDetailsMessage);
+    } catch (error) {
+      console.log("Something went wrong with mailing:", error);
+    }
     res.status(201).json(registration);
   } catch (error) {
     console.error("Error during registration:", error);
@@ -96,7 +111,7 @@ export const getUserRegistrations = async (req, res) => {
       where: { id: userId },
       include: {
         registrations: {
-          include: { conference: true }, // Include conference details
+          include: { conference: true, registrationDetail: true },
         },
       },
     });
@@ -146,12 +161,24 @@ export const approveRegistration = async (req, res) => {
   try {
     const { id } = req.params;
     const { approve } = req.body;
+    const { email } = req.body;
 
     const updatedRegistration = await prisma.registration.update({
       where: { id },
       data: { approved: approve },
     });
-
+    // console.log(email);
+    if (approve == true) {
+      mailer(
+        email,
+        `Congratulations you have been approved for conference ${id}`
+      );
+    } else {
+      mailer(
+        email,
+        ` Unfortunately, your application has been rejected for the conference ${id}`
+      );
+    }
     res.status(200).json(updatedRegistration);
   } catch (error) {
     res.status(500).json({
