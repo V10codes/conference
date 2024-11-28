@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import apiRequest from "../../lib/apiRequest";
 import { AuthContext } from "../../context/AuthContext";
 import "./authoredConferences.scss";
@@ -9,6 +9,7 @@ const AuthoredConferences = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchConferences = async () => {
@@ -42,6 +43,31 @@ const AuthoredConferences = () => {
     fetchConferences();
   }, [currentUser.id]);
 
+  const handleDelete = async (conferenceId) => {
+    // Add a confirmation dialog before deletion
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this conference?"
+    );
+    if (!confirmDelete) {
+      return; // If the user cancels, stop the deletion
+    }
+
+    try {
+      await apiRequest.delete(`/conferences/${conferenceId}`);
+      setConferences(
+        conferences.filter((conference) => conference.id !== conferenceId)
+      );
+    } catch (err) {
+      console.error("Failed to delete conference:", err);
+      setError("Failed to delete the conference. Please try again later.");
+    }
+  };
+
+  const handleUpdate = (conferenceId) => {
+    // Navigate to the update page (assuming you have a route for updating conferences)
+    navigate(`/authored-conferences/update/${conferenceId}`);
+  };
+
   if (loading) {
     return <p>Loading conferences...</p>;
   }
@@ -62,6 +88,7 @@ const AuthoredConferences = () => {
               <tr>
                 <th>Title</th>
                 <th>Total Registrations</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -75,6 +102,20 @@ const AuthoredConferences = () => {
                     </Link>
                   </td>
                   <td>{conference.totalRegistrations}</td>
+                  <td className="conference-actions">
+                    <button
+                      className="update-btn"
+                      onClick={() => handleUpdate(conference.id)}
+                    >
+                      Update
+                    </button>
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDelete(conference.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

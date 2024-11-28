@@ -19,6 +19,8 @@ const ConferenceRegisterPage = () => {
     paymentProof: null,
   });
 
+  const [loading, setLoading] = useState(false); // Loading state
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
@@ -48,6 +50,7 @@ const ConferenceRegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
 
     const userId = currentUser.id;
     const conferenceId = id;
@@ -75,7 +78,6 @@ const ConferenceRegisterPage = () => {
       formData.transactionDate
     );
 
-    // Append files
     if (formData.identityCard) {
       registrationFormData.append("identityCard", formData.identityCard);
     }
@@ -98,6 +100,8 @@ const ConferenceRegisterPage = () => {
       const errorMessage =
         error.response?.data?.error || "An error occurred while registering.";
       alert(errorMessage);
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
@@ -196,8 +200,9 @@ const ConferenceRegisterPage = () => {
             required
           />
         </div>
-        <button type="submit" className="submit-button">
-          Submit Registration
+
+        <button type="submit" className="submit-button" disabled={loading}>
+          {loading ? "Submitting..." : "Submit Registration"}
         </button>
       </form>
     </div>

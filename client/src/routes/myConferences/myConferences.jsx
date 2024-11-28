@@ -15,6 +15,7 @@ const MyConferences = () => {
         const response = await apiRequest.get(
           `/registrations/user/${currentUser.id}`
         );
+        console.log(response);
         setConferences(response.data); // Assuming response.data returns the array you shared
       } catch (err) {
         console.error("Failed to fetch conferences:", err);
@@ -50,6 +51,7 @@ const MyConferences = () => {
                 <th>Date / Time</th>
                 <th>Venue</th>
                 <th>Approval Status</th>
+                <th>View Papers</th>
                 <th>Price (INR)</th>
               </tr>
             </thead>
@@ -77,6 +79,28 @@ const MyConferences = () => {
                     }
                   >
                     {registration.approved ? "Approved" : "Not Approved"}
+                  </td>
+                  <td>
+                    <a
+                      href={registration.registrationDetail.identityCardUrl}
+                      target="_blank"
+                      style={{
+                        textDecoration: "none",
+                        color: "blue",
+                        padding: "5px",
+                        transition: "background-color 0.3s, color 0.3s",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = "#f0f0f0";
+                        e.target.style.color = "darkblue";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = "transparent";
+                        e.target.style.color = "blue";
+                      }}
+                    >
+                      View Paper
+                    </a>
                   </td>
                   <td>{registration.conference.price.toFixed(2)}</td>
                 </tr>

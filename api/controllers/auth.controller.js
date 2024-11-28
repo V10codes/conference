@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma.js";
+import { mailer } from "../utils/mailer.js";
 export const register = async (req, res) => {
   const { username, email, password } = req.body;
   try {
@@ -15,7 +16,14 @@ export const register = async (req, res) => {
         password: hashedPassword,
       },
     });
-
+    try {
+      mailer(
+        email,
+        `You have successfully registered in the portal with username: ${username} and email: ${email}`
+      );
+    } catch (error) {
+      console.log("something went wrong with mailgun api");
+    }
     console.log(newUser);
     res.status(201).json({ message: "User created successfully" });
   } catch (err) {
