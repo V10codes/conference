@@ -37,7 +37,7 @@ Here are some screenshots showcasing the application:
 ![Screenshot 2024-11-26 192212](https://github.com/V10codes/conference/blob/main/client/public/Screenshot%202024-11-26%20192212.png)
 *This is the registration page where users can create an account and begin their journey to attend conferences.*
 
-### 2. User Dashboard
+### 2. Dashboard
 ![Screenshot 2024-12-05 211404](https://github.com/V10codes/conference/blob/main/client/public/Screenshot%202024-12-05%20211404.png)
 *The user dashboard shows all the conferences that users are registered for, allowing them to manage their attendance.*
 
