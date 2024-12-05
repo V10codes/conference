@@ -160,27 +160,48 @@ export const getConferenceRegistrations = async (req, res) => {
 export const approveRegistration = async (req, res) => {
   try {
     const { id } = req.params;
-    const { approve } = req.body;
-    const { email } = req.body;
+    const { approve, email } = req.body;
 
+    // Fetch the registration details, including the related conference
+    const registration = await prisma.registration.findUnique({
+      where: { id },
+      include: {
+        conference: true, // Fetch associated conference details
+      },
+    });
+
+    if (!registration) {
+      return res.status(404).json({ error: "Registration not found." });
+    }
+
+    // Update the approval status
     const updatedRegistration = await prisma.registration.update({
       where: { id },
       data: { approved: approve },
     });
-    // console.log(email);
-    if (approve == true) {
+
+    // Fetch conference details
+    const { title, venue, startDate, endDate } = registration.conference;
+
+    const formattedStartDate = new Date(startDate).toLocaleDateString();
+    const formattedEndDate = new Date(endDate).toLocaleDateString();
+
+    // Email content based on approval status
+    if (approve) {
       mailer(
         email,
-        `Congratulations you have been approved for conference ${id}`
+        `Congratulations! You have been approved for the conference "${title}".\n\nDetails:\n- Venue: ${venue}\n- Start Date: ${formattedStartDate}\n- End Date: ${formattedEndDate}\n\nYour registration ID is: ${id}.\nWe look forward to your participation!`
       );
     } else {
       mailer(
         email,
-        ` Unfortunately, your application has been rejected for the conference ${id}`
+        `Application Rejected, Unfortunately, your application for the conference "${title}" has been rejected.`
       );
     }
+
     res.status(200).json(updatedRegistration);
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       error: "An error occurred while updating registration approval status.",
     });

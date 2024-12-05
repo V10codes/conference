@@ -22,7 +22,6 @@ model Conference {
   price          Float?           @default(0.0)
   guestSpeakers  String[]         @default([])
   topics         String[]         @default([])
-  // Establish relationship with Registration model
   registrations  Registration[]   @relation("ConferenceRegistrations") // Relationship to registrations
   upiId          String         @db.String
   bankName       String         @db.String
@@ -33,14 +32,14 @@ model Conference {
 }
 
 model User {
-  id             String              @id @default(auto()) @map("_id") @db.ObjectId
-  email          String              @unique
-  username       String              @unique
-  password       String 
-  createdAt      DateTime            @default(now())
-  authored       Conference[]        @relation("AuthorOfConference")
-  // Array of conference registrations
-  registrations   Registration[]     @relation("UserRegistrations") // Relationship to registrations
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  email          String           @unique
+  username       String           @unique
+  password       String
+  createdAt      DateTime         @default(now())
+  role           String           @default("attendee") // attendee or admin
+  authored       Conference[]     @relation("AuthorOfConference")
+  registrations  Registration[]   @relation("UserRegistrations") 
 }
 
 model Registration {

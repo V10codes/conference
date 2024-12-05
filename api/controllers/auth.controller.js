@@ -32,7 +32,7 @@ export const register = async (req, res) => {
   }
 };
 export const login = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, role } = req.body;
   try {
     //CHECK IF USER EXISTS IN DATABASE OR NOT
     const user = await prisma.user.findUnique({
@@ -51,12 +51,12 @@ export const login = async (req, res) => {
     const token = jwt.sign(
       {
         id: user.id,
-        isAdmin: true,
+        role,
       },
       process.env.JWT_SECRET_KEY,
       { expiresIn: age }
     );
-
+    user.role = role;
     const { password: userPassword, ...userInfo } = user;
     res
       .cookie("token", token, {

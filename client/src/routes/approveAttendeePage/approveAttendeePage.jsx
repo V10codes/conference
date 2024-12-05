@@ -15,6 +15,7 @@ const ApproveAttendeePage = () => {
         const response = await apiRequest.get(
           `/registrations/conference/${id}`
         );
+        console.log(response);
         setAttendees(response.data);
       } catch (err) {
         setError(err.message);
@@ -79,7 +80,7 @@ const ApproveAttendeePage = () => {
                 {attendee.user ? (
                   <>
                     <td>{attendee.registrationDetail.fullName}</td>
-                    <td>{attendee.user.email}</td>
+                    <td>{attendee.registrationDetail.email}</td>
                     <td>{attendee.registrationDetail.gender}</td>
                     <td>{attendee.registrationDetail.participationMode}</td>
                     <td>{attendee.registrationDetail.mobileNumber}</td>
@@ -117,7 +118,7 @@ const ApproveAttendeePage = () => {
                           toggleApproval(
                             attendee.id,
                             attendee.approved,
-                            attendee.user.email
+                            attendee.registrationDetail.email
                           )
                         }
                       >

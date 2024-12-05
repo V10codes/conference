@@ -5,12 +5,18 @@ import { AuthContext } from "../../context/AuthContext";
 
 const Navbar = () => {
   const { currentUser } = useContext(AuthContext); // Retain currentUser functionality
-
   return (
     <nav className="wrapper">
       <div className="header">
         <h2>NIT Raipur - An IEEE Conference, India</h2>
-        <h3>Authors Portal</h3>
+        <h3>
+          {currentUser
+            ? `${
+                currentUser.role.charAt(0).toUpperCase() +
+                currentUser.role.slice(1)
+              } Portal`
+            : "Conference Portal"}
+        </h3>
       </div>
       <div className="nav-items">
         <div className="navbar-left">
