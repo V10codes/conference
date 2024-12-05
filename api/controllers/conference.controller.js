@@ -48,7 +48,7 @@ export const getConference = async (req, res) => {
 
 export const addConference = async (req, res) => {
   const { conferenceData } = req.body; // Destructure conferenceData from body
-  const tokenUserId = req.userId; // Assuming req.userId contains the user ID
+  const tokenUserId = req.userId;
 
   // Validate required fields
   if (

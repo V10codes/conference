@@ -15,6 +15,7 @@ const ApproveAttendeePage = () => {
         const response = await apiRequest.get(
           `/registrations/conference/${id}`
         );
+        console.log(response);
         setAttendees(response.data);
       } catch (err) {
         setError(err.message);
