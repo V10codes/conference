@@ -28,3 +28,21 @@ Features
 -   **Responsive Design**: Ensures a seamless experience across devices using SASS.
 -   **Email Notifications**: Users receive conference-related notifications via Mailgun.
 -   **Image Storage**: Conference images are stored and managed via Cloudinary
+
+## Screenshots
+
+Here are some screenshots showcasing the application:
+
+### 1. Registration Page
+![Screenshot 2024-11-26 192212](https://github.com/V10codes/conference/blob/main/client/public/Screenshot%202024-11-26%20192212.png)
+*This is the registration page where users can create an account and begin their journey to attend conferences.*
+
+### 2. User Dashboard
+![Screenshot 2024-12-05 211404](https://github.com/V10codes/conference/blob/main/client/public/Screenshot%202024-12-05%20211404.png)
+*The user dashboard shows all the conferences that users are registered for, allowing them to manage their attendance.*
+
+### 3. System Architecture Diagram
+![System Architecture Diagram](https://github.com/V10codes/conference/blob/main/client/public/diagram-export-11-26-2024-10_01_17-PM.png)
+*This diagram illustrates the overall system architecture of the Conference Management System.*
+
+---
